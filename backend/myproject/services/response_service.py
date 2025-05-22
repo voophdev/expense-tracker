@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Tuple, Optional
 from django.utils import timezone
 
+
 class ResponseService:
 
     def client_response(self, status_code: int, response_data: any = None) -> Response:
@@ -15,8 +16,7 @@ class ResponseService:
 
         return Response(response_data, status=status_code)
 
-
-    def ok_response(self, response_data: any) -> Response:
+    def ok(self, response_data: any) -> Response:
         """Returns 200 status code."""
 
         return self.client_response(
@@ -24,23 +24,20 @@ class ResponseService:
             response_data=response_data
         )
 
-
-    def created_response(self, response_data: any) -> Response:
+    def created(self, response_data: any) -> Response:
         """Returns 201 status code."""
         return self.client_response(
             status_code=status.HTTP_201_CREATED,
             response_data=response_data
         )
 
-
-    def no_content_response(self, ) -> Response:
+    def no_content(self, ) -> Response:
         return self.client_response(
             status_code=status.HTTP_204_NO_CONTENT
         )
 
-
-    def internal_error_response(self, exception: Exception,
-                                error_message: str | None = None, error_details: list[any] | None = None) -> Response:
+    def internal_error(self, exception: Exception,
+                       error_message: str | None = None, error_details: list[any] | None = None) -> Response:
         """Returns 500 status code."""
 
         res_error_details = []
@@ -59,20 +56,19 @@ class ResponseService:
             response_data=error_message_obj.to_json()
         )
 
-
-    def not_found_response(self, error_details: list[any], error_message: str | None = None) -> Response:
+    def not_found(self, error_details: list[any], error_message: str | None = None) -> Response:
         """Returns 404 status code."""
 
         error_message = error_message if error_message != None else "Not Found"
-        error_message_obj = NotFound(message=error_message, details=error_details)
+        error_message_obj = NotFound(
+            message=error_message, details=error_details)
 
         return self.client_response(
             status_code=status.HTTP_404_NOT_FOUND,
             response_data=error_message_obj.to_json()
         )
 
-
-    def bad_request_response(self, error_details: list[any], error_message: str | None = None) -> Response:
+    def bad_request(self, error_details: list[any], error_message: str | None = None) -> Response:
         """Returns 400 status code."""
 
         error_message = error_message if error_message != None else "Bad Request"
@@ -82,4 +78,4 @@ class ResponseService:
         return self.client_response(
             status_code=status.HTTP_400_BAD_REQUEST,
             response_data=error_message_obj.to_json()
-        ) 
+        )
