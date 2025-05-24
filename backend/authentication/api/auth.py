@@ -3,16 +3,16 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from authentication.services.user_service import UsersService
-from myproject.services.response_service import ResponseService
+from authentication.services.user_service import UsersService as service
+from myproject.services.response_service import ResponseService as response
 
 
 class Login(APIView):
     permission_classes = [AllowAny]
 
-    def __init__(self, service=None):
-        self.response = ResponseService()
-        self.service = service or UsersService()
+    # def __init__(self, service=None):
+    #     response = ResponseService()
+    #     service = service or UsersService()
 
     def post(self, request: Request):
 
@@ -22,12 +22,12 @@ class Login(APIView):
             password = request.data.get('password')
 
             if not email and not password:
-                return self.response.bad_request_response(
+                return response.bad_request(
                     error_details="email and password can't be blank"
                 )
 
-            if not self.service.get_user(email=email):
-                return self.response.not_found_response(
+            if not service.get_user(email=email):
+                return response.not_found(
                     error_details="User not found"
                 )
 
@@ -41,12 +41,12 @@ class Login(APIView):
                 user_data = self.__get_user_info(
                     user, email, access_token, refresh_token)
 
-            return self.response.ok_response(
+            return response.ok(
                 response_data=user_data
             )
 
         except Exception as e:
-            return self.response.internal_error_response(e)
+            return response.internal_error(e)
 
     def __get_user_info(self, user, email, access_token, refresh_token):
 
@@ -54,7 +54,7 @@ class Login(APIView):
             'id', 'username', 'first_name', 'last_name', 'email', 'address', 'mobile_number', 'is_active'
         ]
 
-        data = self.service.get_user(email=email, values=values)
+        data = service.get_user(email=email, values=values)
 
         user_data = data[0]
 

@@ -4,7 +4,8 @@ from typing import List, Optional
 
 class UsersService:
 
-    def get_user(self, email: str, values: Optional[List[str]] = None) -> Users:
+    @staticmethod
+    def get_user(email: str, values: Optional[List[str]] = None) -> Users:
         user = Users.objects.filter(email=email)
         if values:
             return user.values(*values)
