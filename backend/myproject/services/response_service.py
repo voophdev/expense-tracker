@@ -30,7 +30,8 @@ class ResponseService:
             response_data=response_data
         )
 
-    def no_content(cls, ) -> Response:
+    @classmethod
+    def no_content(cls) -> Response:
         return cls.client_response(
             status_code=status.HTTP_204_NO_CONTENT
         )
