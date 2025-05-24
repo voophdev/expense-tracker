@@ -7,6 +7,17 @@ class Category(models.Model):
         Users, on_delete=models.CASCADE, blank=False, null=True)
     name = models.CharField(max_length=100)
     budget = models.DecimalField(max_digits=10, decimal_places=2)
+    is_default = models.BooleanField(default=False)
+    hidden = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'name'], name='unique_user_category')
+        ]
+
+    def __str__(self):
+        return self.name
 
 
 class Expense(models.Model):
